@@ -39,7 +39,8 @@ model Pet {
   orgId        String
   created_at   DateTime @default(now())
 
-  org                  Org                    @relation(fields: [orgId], references: [id])
+  org                  Org                    @relation(fields: [org_id], references: [id])
+  org_id               String
   pets                 PetGallery[]
   adoptionRequirements AdoptionRequirements[]
 
@@ -50,8 +51,8 @@ model PetGallery {
   id    String @id @default(uuid())
   image String
 
-  pet   Pet    @relation(fields: [petId], references: [id])
-  petId String
+  pet   Pet    @relation(fields: [pet_id], references: [id])
+  pet_id String
 
   @@map("pet_gallery")
 }
@@ -60,8 +61,8 @@ model AdoptionRequirements {
   id    String @id @default(uuid())
   title String
 
-  pet   Pet    @relation(fields: [petId], references: [id])
-  petId String
+  pet   Pet    @relation(fields: [pet_id], references: [id])
+  pet_id String
 
   @@map("adoption_requirements")
 }
