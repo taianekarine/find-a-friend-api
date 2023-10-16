@@ -3,10 +3,20 @@ import { Prisma } from '@prisma/client'
 import { OrgsRepository } from '../orgs-repository'
 
 export class PrismaOrgRepository implements OrgsRepository {
-  async findById(id: string) {
+  async findById(orgId: string) {
     const org = await prisma.org.findUnique({
       where: {
-        id,
+        id: orgId,
+      },
+    })
+
+    return org
+  }
+
+  async findByCep(cep: string) {
+    const org = await prisma.org.findFirst({
+      where: {
+        cep,
       },
     })
 
