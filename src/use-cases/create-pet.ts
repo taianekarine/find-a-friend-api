@@ -3,8 +3,6 @@ import { ResourceNotFoundError } from './errors/resource-not-found-error'
 import { PetsRepository } from '@/repositories/pets-repository'
 import { OrgsRepository } from '@/repositories/orgs-repository'
 import { InvalidRequerimentRequiredError } from './errors/invalid-requeriment-required'
-import { getGeoLocationByCEP } from '@/lib/location'
-import { titleize } from '@/utils/titlesize'
 import { PetsAdoptionRequirementsRepository } from '@/repositories/pets-adoption-requirements-repository'
 
 interface CreatePetUseCaseRequest {
@@ -48,9 +46,9 @@ export class CreatePetUseCase {
     petId,
     adoptionRequirements,
   }: CreatePetUseCaseRequest): Promise<CreatePetUseCaseResponse> {
-    const orgIdNotFound = await this.orgsRepository.findById(orgId)
+    const org_Id = await this.orgsRepository.findById(orgId)
 
-    if (orgIdNotFound) {
+    if (org_Id) {
       throw new ResourceNotFoundError()
     }
 
@@ -62,9 +60,9 @@ export class CreatePetUseCase {
       throw new InvalidRequerimentRequiredError()
     }
 
-    const orgCepNotFound = await this.orgsRepository.findByCep(city)
+    const org_Cep = await this.orgsRepository.findByCep(city)
 
-    if (orgCepNotFound) {
+    if (org_Cep) {
       throw new ResourceNotFoundError()
     }
 
