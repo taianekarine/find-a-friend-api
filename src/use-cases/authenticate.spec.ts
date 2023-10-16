@@ -1,15 +1,15 @@
 import { expect, describe, it, beforeEach } from 'vitest'
-import { InMemoryOrgRepository } from '@/repositories/in-memory/in-memory-orgs-repository'
+import { InMemoryOrgsRepository } from '@/repositories/in-memory/in-memory-orgs-repository'
 import { AuthenticateUseCase } from './authenticate'
 import { hash } from 'bcryptjs'
 import { InvalidCredentialsError } from './errors/invalid-credentials-error'
 
-let orgsRepository: InMemoryOrgRepository
+let orgsRepository: InMemoryOrgsRepository
 let sut: AuthenticateUseCase
 
 describe('Authenticate Org Use Case', () => {
   beforeEach(() => {
-    orgsRepository = new InMemoryOrgRepository()
+    orgsRepository = new InMemoryOrgsRepository()
     sut = new AuthenticateUseCase(orgsRepository)
   })
 

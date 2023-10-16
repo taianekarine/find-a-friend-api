@@ -40,6 +40,7 @@ model Pet {
 
   org                  Org                    @relation(fields: [org_id], references: [id])
   org_id               String
+  
   pets                 PetGallery[]
   adoptionRequirements AdoptionRequirements[]
 

@@ -2,13 +2,18 @@ import fastify from 'fastify'
 import { appRoutes } from './http/routes'
 import { env } from './env'
 import { ZodError } from 'zod'
-import fastifyJwt from '@fastify/jwt'
+import multer from 'fastify-multer'
+import path from 'path'
+import fastifyStatic from '@fastify/static'
 
 export const app = fastify()
 
+app.register(multer.contentParser)
 app.register(appRoutes)
-app.register(fastifyJwt, {
-  secret: env.JWT_SECRET,
+
+app.register(fastifyStatic, {
+  root: path.join(__dirname, '..', 'tmp'),
+  prefix: '/images/',
 })
 
 app.setErrorHandler((error, _, reply) => {
