@@ -4,7 +4,7 @@ import { compare } from 'bcryptjs'
 import { InMemoryOrgRepositories } from '@/repositories/in-memory/in-memory-orgs-repository'
 import { OrgsAlreadyExistsError } from './errors/orgs-already-exists-error'
 
-describe('Registern Org Use Case', () => {
+describe('Register Org Use Case', () => {
   it('should be able register', async () => {
     const orgsRepository = new InMemoryOrgRepositories()
     const registerUseCase = new RegisterUseCase(orgsRepository)
