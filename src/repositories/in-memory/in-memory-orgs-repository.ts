@@ -1,7 +1,7 @@
 import { Org, Prisma } from '@prisma/client'
 import { OrgsRepository } from '../orgs-repository'
 
-export class InMemoryOrgRepositories implements OrgsRepository {
+export class InMemoryOrgRepository implements OrgsRepository {
   public items: Org[] = []
 
   async findByEmail(email: string) {
