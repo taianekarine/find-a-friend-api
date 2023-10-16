@@ -36,7 +36,6 @@ model Pet {
   independence String
   type         String
   photo        String
-  orgId        String
   created_at   DateTime @default(now())
 
   org                  Org                    @relation(fields: [org_id], references: [id])
