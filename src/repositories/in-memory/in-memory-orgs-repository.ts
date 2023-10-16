@@ -1,4 +1,3 @@
-import { prisma } from '@/lib/prisma'
 import { Org, Prisma } from '@prisma/client'
 import { OrgsRepository } from '../orgs-repository'
 

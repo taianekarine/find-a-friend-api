@@ -56,7 +56,7 @@ describe('Registern Org Use Case', () => {
       whatsappNumber: '(34) 99630-5110',
     })
 
-    expect(() =>
+    await expect(() =>
       registerUseCase.execute({
         name: 'John Doe',
         email,
