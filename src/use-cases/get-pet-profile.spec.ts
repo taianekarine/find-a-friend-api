@@ -1,19 +1,13 @@
-import { ResourceNotFoundError } from '@/use-cases/errors/resource-not-found-error'
 import { expect, describe, it, beforeEach } from 'vitest'
 import { InMemoryPetsRepository } from '@/repositories/in-memory/in-memory-pets-repository'
 import { GetPetProfileUseCase } from './get-pet-profile'
-import { InMemoryPetsAdoptionRequerimentsRepository } from '@/repositories/in-memory/in-memory-pets-adoption-requirements-repository'
-import { PetsRepository } from '@/repositories/pets-repository'
 
 let petsRepository: InMemoryPetsRepository
-let petsAdoptionRequirementsRepository: InMemoryPetsAdoptionRequerimentsRepository
 let sut: GetPetProfileUseCase
 
-describe('Get User Profile Use Case', () => {
+describe('Get Pet Profile Use Case', () => {
   beforeEach(async () => {
     petsRepository = new InMemoryPetsRepository()
-    petsAdoptionRequirementsRepository =
-      new InMemoryPetsAdoptionRequerimentsRepository()
     sut = new GetPetProfileUseCase(petsRepository)
   })
 
@@ -36,7 +30,5 @@ describe('Get User Profile Use Case', () => {
     })
 
     expect(pet.name).toEqual('Pet example')
-
-    // expect(org.name).toEqual('Org Example')
   })
 })

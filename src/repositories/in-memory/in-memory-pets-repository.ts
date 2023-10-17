@@ -15,6 +15,12 @@ export class InMemoryPetsRepository implements PetsRepository {
     return pet
   }
 
+  async searchMany(query: string, page: number) {
+    return this.items
+      .filter((item) => item.city.includes(query))
+      .splice((page - 1) * 20, page * 20) // Lista 20 itens por página
+  }
+
   async create(data: Prisma.PetUncheckedCreateInput) {
     const pet = {
       id: randomUUID(),

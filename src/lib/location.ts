@@ -1,59 +1,39 @@
-import { titleize } from '@/utils/titlesize'
 import axios from 'axios'
 
-interface BrasilStateProps {
-  name: string
+interface Address {
+  cep: string
+  logradouro: string
+  complemento: string
+  bairro: string
+  localidade: string
+  uf: string
 }
 
-export const getBrasilStates = async () => {
-  const response = await axios.get('https://brasilapi.com.br/api/ibge/uf/v1')
+export const findCityByCEP = async (cep: string): Promise<string | null> => {
+  try {
+    const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`)
 
-  return response.data as BrasilStateProps
-}
+    if (response.status === 200) {
+      const addressData: Address = response.data
 
-interface BrasilCityResponse {
-  nome: string
-  codigo_ibge: string
-}
+      return addressData.localidade
+    }
 
-interface BrasilCityProps {
-  name: string
-  code: string
-}
-
-export const getBrasilCitysByState = async (
-  UFCode: string,
-): Promise<BrasilCityProps[]> => {
-  const response = await axios.get<BrasilCityResponse[]>(
-    `https://brasilapi.com.br/api/ibge/municipios/v1/${UFCode}`,
-  )
-
-  return response.data.map((city) => ({
-    name: titleize(city.nome),
-    code: city.codigo_ibge,
-  }))
-}
-
-interface GeoLocationProps {
-  address: string
-  city: string
-  coordinates: {
-    longitude: string
-    latitude: string
+    throw new Error('Error when querying the CEP.')
+  } catch (error) {
+    console.error('Error when querying the CEP.')
+    return null
   }
 }
 
-export const getGeoLocationByCEP = async (
-  cep: string,
-): Promise<GeoLocationProps> => {
-  const response = await axios.get(`https://brasilapi.com.br/api/cep/v2/${cep}`)
-
-  return {
-    address: response.data.street,
-    city: response.data.city,
-    coordinates: {
-      latitude: response.data.location.coordinates.latitude,
-      longitude: response.data.location.coordinates.longitude,
-    },
-  }
-}
+// Exemplo de uso
+const cep = '12345678' // Insira um CEP válido
+findCityByCEP(cep)
+  .then((city) => {
+    if (city) {
+      console.log(`A cidade para o CEP ${cep} é: ${city}`)
+    } else {
+      console.log(`Não foi possível obter a cidade para o CEP ${cep}.`)
+    }
+  })
+  .catch((error) => console.error('Erro:', error))
