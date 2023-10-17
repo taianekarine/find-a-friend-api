@@ -17,7 +17,6 @@ export class GetOrgProfileUseCase {
     orgId,
   }: GetOrgProfileUseCaseRequest): Promise<GetOrgProfileUseCaseResponse> {
     const org = await this.orgsRepository.findById(orgId)
-    console.log('org id get profile', org)
 
     if (!org) {
       throw new ResourceNotFoundError()

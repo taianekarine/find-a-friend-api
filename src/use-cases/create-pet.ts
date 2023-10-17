@@ -18,7 +18,6 @@ interface CreatePetUseCaseRequest {
   orgId: string
   petId: string
   adoptionRequirements: string
-  requeriment: string
 }
 
 interface CreatePetUseCaseResponse {
@@ -52,9 +51,9 @@ export class CreatePetUseCase {
       throw new ResourceNotFoundError()
     }
 
-    const parsedRequirement = JSON.parse(adoptionRequirements)
+    const parsedRequirements = JSON.parse(adoptionRequirements)
 
-    const checkRequerimentLength = parsedRequirement.length <= 0
+    const checkRequerimentLength = parsedRequirements.length <= 0
 
     if (checkRequerimentLength) {
       throw new InvalidRequerimentRequiredError()
@@ -79,12 +78,12 @@ export class CreatePetUseCase {
       org_id: orgId,
     })
 
-    for await (const requirement of parsedRequirement) {
+    parsedRequirements.forEach(async (requirement: string) => {
       await this.petsAdoptionRequirementsRepository.create({
         title: requirement,
         pet_id: petId,
       })
-    }
+    })
 
     return {
       pet,

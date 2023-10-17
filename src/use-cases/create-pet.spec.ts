@@ -26,32 +26,56 @@ describe('Create Pet Use Case', () => {
     await orgsRepository.create({
       id: 'org-01',
       name: 'Org Example',
-      email: 'org1@example.com',
+      email: 'org@example.com',
       password_hash: '123456',
       address: 'address',
-      cep: '38414-669',
-      whatsappNumber: '(34) 99630-5110',
+      cep: '99999-999',
+      whatsappNumber: '(99) 99999-9999',
     })
 
-    const petData = {
-      name: 'Pet example',
-      description: 'Pet description',
-      city: 'Uberlândia',
-      age: 'cub',
-      energy: 2,
-      size: 'medium',
-      independence: 'low',
-      type: 'cat',
-      photo: 'cat-photo-example.png',
-      orgId: 'org-01',
-      petId: 'pet-01',
-      adoptionRequirements: '["",""]',
-      requeriment: 'Example Requirement',
+    const createdPet = await sut.execute({
+      name: 'Test Pet',
+      description: 'Test description',
+      city: 'Test City',
+      age: '2 years',
+      energy: 4,
+      size: 'Medium',
+      independence: 'High',
+      type: 'Dog',
+      photo: 'test-photo-url',
+      orgId: 'org-id',
+      petId: 'pet-id',
+      adoptionRequirements: JSON.stringify(['Requirement 1', 'Requirement 2']),
+    })
+
+    expect(createdPet).toBeDefined()
+    expect(createdPet.pet.id).toEqual(expect.any(String))
+  })
+
+  it('should create a new pet and adoption requirements', async () => {
+    const createdPet = {
+      name: 'Test Pet',
+      description: 'Test description',
+      city: 'Test City',
+      age: '2 years',
+      energy: 4,
+      size: 'Medium',
+      independence: 'High',
+      type: 'Dog',
+      photo: 'test-photo-url',
+      orgId: 'org-id',
+      petId: 'pet-id',
+      adoptionRequirements: JSON.stringify(['Requirement 1', 'Requirement 2']),
     }
 
-    const pet = await sut.execute(petData)
+    const parsedRequirements = JSON.parse(createdPet.adoptionRequirements)
 
-    expect(pet).toBeDefined()
-    expect(pet.pet.id).toEqual(expect.any(String))
+    parsedRequirements.forEach((requirement: string) => {
+      const adoptionRequirements = petsAdoptionRequirementsRepository.create({
+        title: requirement,
+        pet_id: createdPet.petId,
+      })
+      expect(adoptionRequirements).toBeDefined()
+    })
   })
 })

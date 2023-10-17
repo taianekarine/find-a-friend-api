@@ -10,7 +10,7 @@ export class InMemoryPetsAdoptionRequerimentsRepository
   async create(
     data: Prisma.AdoptionRequirementsUncheckedCreateInput,
   ): Promise<AdoptionRequirements> {
-    const adoptionRequirements: AdoptionRequirements = {
+    const adoptionRequirements = {
       id: randomUUID(),
       title: data.title,
       pet_id: data.pet_id,
