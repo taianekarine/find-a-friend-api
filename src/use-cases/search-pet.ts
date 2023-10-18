@@ -1,4 +1,3 @@
-import { findCityByCEP } from '@/lib/location'
 import { PetsRepository } from '@/repositories/pets-repository'
 import { Pet } from '@prisma/client'
 

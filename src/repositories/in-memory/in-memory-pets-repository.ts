@@ -1,6 +1,6 @@
 import { Pet, Prisma } from '@prisma/client'
 import { randomUUID } from 'node:crypto'
-import { PetsRepository } from '../pets-repository'
+import { FindByCharacteristicsParams, PetsRepository } from '../pets-repository'
 
 export class InMemoryPetsRepository implements PetsRepository {
   public items: Pet[] = []
@@ -18,7 +18,19 @@ export class InMemoryPetsRepository implements PetsRepository {
   async searchMany(query: string, page: number) {
     return this.items
       .filter((item) => item.city.includes(query))
-      .splice((page - 1) * 20, page * 20) // Lista 20 itens por página
+      .slice((page - 1) * 20, page * 20)
+  }
+
+  async findByCharacteristics(params: FindByCharacteristicsParams) {
+    return this.items.filter((item) => {
+      return (
+        item.age === params.age &&
+        item.energy === params.energy &&
+        item.independence === params.independence &&
+        item.size === params.size &&
+        item.city === params.city
+      )
+    })
   }
 
   async create(data: Prisma.PetUncheckedCreateInput) {
