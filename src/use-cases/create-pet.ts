@@ -9,11 +9,10 @@ import { PetGalleryRepository } from '@/repositories/pet-gallery-repositoy'
 
 interface Filename {
   filename: string
-  filepath: string // Adjust the properties as needed
+  filepath: string
   type: string
-  tasks: null // Adjust the properties as needed
-  id: string // Adjust the properties as needed
-  // ... other properties
+  tasks: null
+  id: string
 }
 interface CreatePetUseCaseRequest {
   name: string
@@ -58,7 +57,7 @@ export class CreatePetUseCase {
     adoptionRequirements,
   }: CreatePetUseCaseRequest): Promise<CreatePetUseCaseResponse> {
     const org_Id = await this.orgsRepository.findById(orgId)
-    console.log(org_Id)
+
     if (!org_Id) {
       throw new ResourceNotFoundError()
     }
