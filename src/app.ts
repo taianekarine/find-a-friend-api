@@ -1,11 +1,12 @@
-import fastify from 'fastify'
+import path from 'path'
 import { env } from './env'
+import fastify from 'fastify'
 import { ZodError } from 'zod'
 import multer from 'fastify-multer'
-import path from 'path'
-import fastifyStatic from '@fastify/static'
 import fastifyJwt from '@fastify/jwt'
+import fastifyStatic from '@fastify/static'
 import { orgsRoutes } from './http/controllers/orgs/routes'
+import { petsRoutes } from './http/controllers/pets/routes'
 
 export const app = fastify()
 
@@ -15,6 +16,7 @@ app.register(fastifyJwt, {
 
 app.register(multer.contentParser)
 app.register(orgsRoutes)
+app.register(petsRoutes)
 
 app.register(fastifyStatic, {
   root: path.join(__dirname, '..', 'tmp'),

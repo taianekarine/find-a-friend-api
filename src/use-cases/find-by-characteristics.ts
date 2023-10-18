@@ -13,7 +13,7 @@ interface FindByCharacteristicsResponse {
   pets: Pet[]
 }
 
-export class FindByCharacteristics {
+export class FindByCharacteristicsUseCase {
   constructor(private petsRepository: PetsRepository) {}
 
   async execute({

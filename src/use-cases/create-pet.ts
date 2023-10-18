@@ -59,12 +59,6 @@ export class CreatePetUseCase {
       throw new InvalidRequerimentRequiredError()
     }
 
-    const org_Cep = await this.orgsRepository.findByCep(city)
-
-    if (org_Cep) {
-      throw new ResourceNotFoundError()
-    }
-
     const pet = await this.petsRepository.create({
       name,
       age,

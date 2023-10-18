@@ -1,9 +1,9 @@
 import request from 'supertest'
 import { app } from '@/app'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
-import { createAndAuthenticateOrg } from '@/utils/create-and-authenticate-org'
+import { createAndAuthenticateOrg } from '../../../utils/test/create-and-authenticate-org'
 
-describe('Profile (e2e)', () => {
+describe('Profile Org(e2e)', () => {
   beforeAll(async () => {
     await app.ready()
   })
@@ -13,7 +13,7 @@ describe('Profile (e2e)', () => {
   })
 
   it('should be able to get user profile', async () => {
-    const { token } = await createAndAuthenticateOrg(app)
+    const { token, org } = await createAndAuthenticateOrg(app)
 
     const profileResponse = await request(app.server)
       .get('/me')
@@ -23,6 +23,7 @@ describe('Profile (e2e)', () => {
     expect(profileResponse.statusCode).toEqual(200)
     expect(profileResponse.body.org).toEqual(
       expect.objectContaining({
+        id: org.id,
         email: 'orgtest@example.com',
       }),
     )
