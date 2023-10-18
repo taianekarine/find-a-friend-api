@@ -42,7 +42,7 @@ model Pet {
   org_id               String
   
   pets                 PetGallery[]
-  adoptionRequirements AdoptionRequirements[]
+  adoption_requirements AdoptionRequirements[]
 
   @@map("pets")
 }

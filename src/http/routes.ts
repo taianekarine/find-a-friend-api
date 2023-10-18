@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify'
 import { register } from './controllers/register'
-import { authenticate } from './controllers/authenticate'
-import { orgProfile } from './controllers/org-profile'
+import { authenticate } from './controllers/orgs/authenticate'
+import { orgProfile } from './controllers/orgs/org-profile'
 import { verifyJwt } from './middlewares/verify-jwt'
 
 export const appRoutes = async (app: FastifyInstance) => {
