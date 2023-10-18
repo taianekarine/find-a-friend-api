@@ -8,7 +8,7 @@ export const findByCharacteristics = async (
 ) => {
   const searchPetsQuerySchema = z.object({
     age: z.string(),
-    energy: z.number(),
+    energy: z.coerce.number(),
     independence: z.string(),
     size: z.string(),
     city: z.string(),
