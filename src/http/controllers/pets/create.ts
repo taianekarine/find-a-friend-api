@@ -1,6 +1,13 @@
 import { makeCreatePetUseCase } from '@/use-cases/factories/make-create-pet-use-case'
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
+import { File } from 'fastify-multer/lib/interfaces'
+
+declare module 'fastify' {
+  export interface FastifyRequest {
+    files: File[]
+  }
+}
 
 export const create = async (req: FastifyRequest, reply: FastifyReply) => {
   const getOrgIdParamsSchema = z.object({
@@ -39,6 +46,16 @@ export const create = async (req: FastifyRequest, reply: FastifyReply) => {
 
   try {
     const createPetUseCase = makeCreatePetUseCase()
+
+    // const images = req.files
+
+    // if (images.length <= 0) {
+    //   return reply
+    //     .status(400)
+    //     .send({ error: 'É necessário no mínimo 1 imagem do pet' })
+    // }
+
+    // const photoPet = images[0].filename
 
     const { pet } = await createPetUseCase.execute({
       name,

@@ -4,19 +4,30 @@ import { PetsRepository } from '@/repositories/pets-repository'
 import { OrgsRepository } from '@/repositories/orgs-repository'
 import { InvalidRequerimentRequiredError } from './errors/invalid-requeriment-required'
 import { PetsAdoptionRequirementsRepository } from '@/repositories/pets-adoption-requirements-repository'
+import { InvalidImageRequiredError } from './errors/invalid-image-required'
+import { PetGalleryRepository } from '@/repositories/pet-gallery-repositoy'
 
+interface Filename {
+  filename: string
+  filepath: string // Adjust the properties as needed
+  type: string
+  tasks: null // Adjust the properties as needed
+  id: string // Adjust the properties as needed
+  // ... other properties
+}
 interface CreatePetUseCaseRequest {
   name: string
-  description: string
-  city: string
   age: string
-  energy: number
   size: string
-  independence: string
   type: string
-  photo: string
+  city: string
   orgId: string
   petId: string
+  energy: number
+  description: string
+  independence: string
+  images: Filename[]
+  photo: string
   adoptionRequirements: string
 }
 
@@ -28,55 +39,73 @@ export class CreatePetUseCase {
   constructor(
     private petsRepository: PetsRepository,
     private orgsRepository: OrgsRepository,
+    private petGalleryRepository: PetGalleryRepository,
     private petsAdoptionRequirementsRepository: PetsAdoptionRequirementsRepository,
   ) {}
 
   async execute({
     name,
-    description,
-    city,
     age,
-    energy,
     size,
-    independence,
     type,
-    photo,
+    city,
     orgId,
     petId,
+    energy,
+    images,
+    description,
+    independence,
     adoptionRequirements,
   }: CreatePetUseCaseRequest): Promise<CreatePetUseCaseResponse> {
     const org_Id = await this.orgsRepository.findById(orgId)
-
-    if (org_Id) {
+    console.log(org_Id)
+    if (!org_Id) {
       throw new ResourceNotFoundError()
     }
 
     const parsedRequirements = JSON.parse(adoptionRequirements)
-
     const checkRequerimentLength = parsedRequirements.length <= 0
 
     if (checkRequerimentLength) {
       throw new InvalidRequerimentRequiredError()
     }
 
-    const pet = await this.petsRepository.create({
-      name,
-      age,
-      city,
-      description,
-      energy: Number(energy),
-      independence,
-      photo,
-      size,
-      type,
-      org_id: orgId,
-    })
-
     parsedRequirements.forEach(async (requirement: string) => {
       await this.petsAdoptionRequirementsRepository.create({
         title: requirement,
         pet_id: petId,
       })
+    })
+
+    const petPhoto = images[0].filename
+    const noImages = !images || images.length === 0
+
+    if (noImages) {
+      throw new InvalidImageRequiredError()
+    }
+
+    for (const image of images) {
+      if (image.filename) {
+        await this.petGalleryRepository.create({
+          image: image.filename,
+          pet_id: petId,
+        })
+      } else {
+        throw new InvalidImageRequiredError()
+      }
+    }
+
+    const pet = await this.petsRepository.create({
+      name,
+      age,
+      size,
+      type,
+      city,
+      photo: petPhoto,
+      org_id: orgId,
+      energy,
+      description,
+      independence,
     })
 
     return {
