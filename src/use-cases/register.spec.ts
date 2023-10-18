@@ -18,9 +18,9 @@ describe('Register Org Use Case', () => {
       name: 'John Doe',
       email: 'johndoe@example.com',
       password: '123456',
-      address: 'Rua Aparecida Gonçalves da Silva, 152',
-      cep: '38414-669',
-      whatsappNumber: '(34) 99630-5110',
+      address: 'Address',
+      cep: '99999-999',
+      whatsappNumber: '(99) 99999-9999',
     })
 
     expect(org.id).toEqual(expect.any(String))
@@ -31,9 +31,9 @@ describe('Register Org Use Case', () => {
       name: 'John Doe',
       email: 'johndoe@example.com',
       password: '123456',
-      address: 'Rua Aparecida Gonçalves da Silva, 152',
-      cep: '38414-669',
-      whatsappNumber: '(34) 99630-5110',
+      address: 'Address',
+      cep: '99999-999',
+      whatsappNumber: '(99) 99999-9999',
     })
 
     const isPasswordCorrectlyHased = await compare('123456', org.password_hash)

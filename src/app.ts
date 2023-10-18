@@ -5,8 +5,13 @@ import { ZodError } from 'zod'
 import multer from 'fastify-multer'
 import path from 'path'
 import fastifyStatic from '@fastify/static'
+import fastifyJwt from '@fastify/jwt'
 
 export const app = fastify()
+
+app.register(fastifyJwt, {
+  secret: env.JWT_SECRET,
+})
 
 app.register(multer.contentParser)
 app.register(appRoutes)
