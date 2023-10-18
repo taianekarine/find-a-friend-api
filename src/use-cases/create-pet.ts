@@ -9,10 +9,10 @@ import { PetGalleryRepository } from '@/repositories/pet-gallery-repositoy'
 
 interface Filename {
   filename: string
-  filepath: string
-  type: string
-  tasks: null
-  id: string
+  filepath?: string
+  type?: string
+  tasks?: null
+  id?: string
 }
 interface CreatePetUseCaseRequest {
   name: string
@@ -21,8 +21,7 @@ interface CreatePetUseCaseRequest {
   type: string
   city: string
   orgId: string
-  petId: string
-  energy: number
+  energy: string
   description: string
   independence: string
   images: Filename[]
@@ -49,7 +48,6 @@ export class CreatePetUseCase {
     type,
     city,
     orgId,
-    petId,
     energy,
     images,
     description,
@@ -62,36 +60,11 @@ export class CreatePetUseCase {
       throw new ResourceNotFoundError()
     }
 
-    const parsedRequirements = JSON.parse(adoptionRequirements)
-    const checkRequerimentLength = parsedRequirements.length <= 0
-
-    if (checkRequerimentLength) {
-      throw new InvalidRequerimentRequiredError()
-    }
-
-    parsedRequirements.forEach(async (requirement: string) => {
-      await this.petsAdoptionRequirementsRepository.create({
-        title: requirement,
-        pet_id: petId,
-      })
-    })
-
     const petPhoto = images[0].filename
     const noImages = !images || images.length === 0
 
     if (noImages) {
       throw new InvalidImageRequiredError()
-    }
-
-    for (const image of images) {
-      if (image.filename) {
-        await this.petGalleryRepository.create({
-          image: image.filename,
-          pet_id: petId,
-        })
-      } else {
-        throw new InvalidImageRequiredError()
-      }
     }
 
     const pet = await this.petsRepository.create({
@@ -102,10 +75,42 @@ export class CreatePetUseCase {
       city,
       photo: petPhoto,
       org_id: orgId,
-      energy,
+      energy: Number(energy),
       description,
       independence,
     })
+
+    const parsedRequirements = JSON.parse(adoptionRequirements)
+    const checkRequerimentLength = parsedRequirements.length <= 0
+
+    if (checkRequerimentLength) {
+      throw new InvalidRequerimentRequiredError()
+    }
+
+    // parsedRequirements.forEach(async (requirement: string) => {
+    //   await this.petsAdoptionRequirementsRepository.create({
+    //     title: requirement,
+    //     pet_id: pet.id,
+    //   })
+    // })
+
+    for (const requirement of parsedRequirements) {
+      await this.petsAdoptionRequirementsRepository.create({
+        pet_id: pet.id,
+        title: requirement,
+      })
+    }
+
+    for (const image of images) {
+      if (image.filename) {
+        await this.petGalleryRepository.create({
+          image: image.filename,
+          pet_id: pet.id,
+        })
+      } else {
+        throw new InvalidImageRequiredError()
+      }
+    }
 
     return {
       pet,

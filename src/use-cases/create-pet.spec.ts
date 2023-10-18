@@ -59,14 +59,13 @@ describe('Create Pet Use Case', () => {
       description: 'Test description',
       city: 'Test City',
       age: '2 years',
-      energy: 4,
+      energy: '4',
       size: 'Medium',
       independence: 'High',
       type: 'Dog',
       photo: 'test-photo-url',
       images: imagesData,
       orgId: org.id,
-      petId: 'pet-id',
       adoptionRequirements: JSON.stringify(['Requirement 1', 'Requirement 2']),
     })
 

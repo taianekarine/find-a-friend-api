@@ -9,6 +9,14 @@ declare module 'fastify' {
   }
 }
 
+interface Filename {
+  filename: string
+  filepath?: string
+  type?: string
+  tasks?: null
+  id?: string
+}
+
 export const create = async (req: FastifyRequest, reply: FastifyReply) => {
   const getOrgIdParamsSchema = z.object({
     orgId: z.string().uuid(),
@@ -19,17 +27,15 @@ export const create = async (req: FastifyRequest, reply: FastifyReply) => {
     description: z.string(),
     city: z.string(),
     age: z.string(),
-    energy: z.number(),
+    energy: z.string(),
     size: z.string(),
     independence: z.string(),
     type: z.string(),
     photo: z.string(),
-    orgId: z.string(),
-    petId: z.string(),
     adoptionRequirements: z.string(),
   })
 
-  const { orgId } = getOrgIdParamsSchema.parse(req.params)
+  const { orgId } = getOrgIdParamsSchema.parse(req.user.sub)
   const {
     name,
     description,
@@ -40,36 +46,29 @@ export const create = async (req: FastifyRequest, reply: FastifyReply) => {
     independence,
     type,
     photo,
-    petId,
     adoptionRequirements,
   } = createPetBodySchema.parse(req.body)
 
   try {
     const createPetUseCase = makeCreatePetUseCase()
 
-    // const images = req.files
-
-    // if (images.length <= 0) {
-    //   return reply
-    //     .status(400)
-    //     .send({ error: 'É necessário no mínimo 1 imagem do pet' })
-    // }
-
-    // const photoPet = images[0].filename
+    const images: Filename[] = req.files.map((file) => ({
+      filename: file.filename ?? '', // Ensure filename is not undefined
+    }))
 
     const { pet } = await createPetUseCase.execute({
       name,
-      description,
-      city,
       age,
-      energy,
       size,
-      independence,
       type,
-      photo,
+      city,
       orgId,
-      petId,
+      energy,
+      description,
+      independence,
       adoptionRequirements,
+      images,
+      photo,
     })
 
     return reply.status(201).send({
@@ -77,6 +76,7 @@ export const create = async (req: FastifyRequest, reply: FastifyReply) => {
     })
   } catch (err) {
     if (err) {
+      console.log(err)
       return reply.status(409).send('Unable to register pet.')
     }
 
