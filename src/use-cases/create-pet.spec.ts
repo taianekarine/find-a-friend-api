@@ -96,6 +96,8 @@ describe('Create Pet Use Case', () => {
         title: requirement,
         pet_id: createdPet.petId,
       })
+
+      console.log(adoptionRequirements)
       expect(adoptionRequirements).toBeDefined()
     })
   })

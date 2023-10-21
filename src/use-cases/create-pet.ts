@@ -87,13 +87,6 @@ export class CreatePetUseCase {
       throw new InvalidRequerimentRequiredError()
     }
 
-    // parsedRequirements.forEach(async (requirement: string) => {
-    //   await this.petsAdoptionRequirementsRepository.create({
-    //     title: requirement,
-    //     pet_id: pet.id,
-    //   })
-    // })
-
     for (const requirement of parsedRequirements) {
       await this.petsAdoptionRequirementsRepository.create({
         pet_id: pet.id,

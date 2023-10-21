@@ -8,7 +8,6 @@ declare module 'fastify' {
     files: File[]
   }
 }
-
 interface Filename {
   filename: string
   filepath?: string
@@ -18,10 +17,6 @@ interface Filename {
 }
 
 export const create = async (req: FastifyRequest, reply: FastifyReply) => {
-  const getOrgIdParamsSchema = z.object({
-    orgId: z.string().uuid(),
-  })
-
   const createPetBodySchema = z.object({
     name: z.string(),
     description: z.string(),
@@ -35,7 +30,8 @@ export const create = async (req: FastifyRequest, reply: FastifyReply) => {
     adoptionRequirements: z.string(),
   })
 
-  const { orgId } = getOrgIdParamsSchema.parse(req.user.sub)
+  const orgId = req.user.sub
+
   const {
     name,
     description,
